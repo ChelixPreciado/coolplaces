@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "977269694239",
+    "firebase_url": "https://coolplaces-6128c.firebaseio.com",
+    "project_id": "coolplaces-6128c",
+    "storage_bucket": "coolplaces-6128c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:977269694239:android:d83b2d07f9ffd461",
+        "android_client_info": {
+          "package_name": "interware.coolapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "977269694239-vn3dovqth49a1juat7op7hl825frl2cq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "interware.coolapp",
+            "certificate_hash": "31B6EB42AF92F56FC61FF105DC885854E0D51289"
+          }
+        },
+        {
+          "client_id": "977269694239-7pih8l41nhdgui60jb08nnli0jg36ugr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDy9vmD1Clk25ycRdS_vmWaLeyJOAOF0Oo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "977269694239-7pih8l41nhdgui60jb08nnli0jg36ugr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
