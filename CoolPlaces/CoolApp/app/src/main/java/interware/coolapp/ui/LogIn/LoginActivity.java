@@ -203,10 +203,11 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener,
         FirebaseUser user = firebaseAuth.getCurrentUser();
         if (user != null) {
             // User is signed in
-            Log.d("Chelix", "onAuthStateChanged:signed_in:" + user.getUid());
+            Log.d("Chelix", "user is signed in: " + user.getUid() + " onAuthStateChanged");
+            startActivity(new Intent(LoginActivity.this, PlacesListActivity.class));
         } else {
             // User is signed out
-            Log.d("Chelis", "onAuthStateChanged:signed_out");
+            Log.d("Chelix", "user is signed out");
         }
     }
 }
