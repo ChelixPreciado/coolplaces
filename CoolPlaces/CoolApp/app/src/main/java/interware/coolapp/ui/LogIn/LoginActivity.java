@@ -161,6 +161,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener,
                             FirebaseUser user = task.getResult().getUser();
                             Log.i("Chelix", "logged user: " + user.getUid());
                             startActivity(new Intent(LoginActivity.this, PlacesListActivity.class));
+                            finish();
                         }else {
                             Log.i("Chelix", "No se pudo iniciar sesión: " + task.getException().getMessage());
                             Toast.makeText(getApplicationContext(), "No se pudo iniciar sesión: " + task.getException().getMessage(),
@@ -205,6 +206,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener,
             // User is signed in
             Log.d("Chelix", "user is signed in: " + user.getUid() + " onAuthStateChanged");
             startActivity(new Intent(LoginActivity.this, PlacesListActivity.class));
+            finish();
         } else {
             // User is signed out
             Log.d("Chelix", "user is signed out");

@@ -1,5 +1,6 @@
 package interware.coolapp.ui.Register;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -24,13 +25,14 @@ import java.util.ArrayList;
 
 import interware.coolapp.R;
 import interware.coolapp.ui.Loader.Loader;
+import interware.coolapp.ui.PlacesList.PlacesListActivity;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
 /**
  * A register screen that offers login via email/password.
  */
-public class RegisterActivity extends AppCompatActivity implements FirebaseAuth.AuthStateListener {
+public class RegisterActivity extends AppCompatActivity {
 
     // UI references.
     private AutoCompleteTextView mEmailView;
@@ -69,18 +71,6 @@ public class RegisterActivity extends AppCompatActivity implements FirebaseAuth.
         });
 
         mLoginFormView = findViewById(R.id.login_form);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mAuth.addAuthStateListener(this);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        mAuth.removeAuthStateListener(this);
     }
 
     /**
@@ -136,9 +126,10 @@ public class RegisterActivity extends AppCompatActivity implements FirebaseAuth.
             public void onComplete(@NonNull Task<AuthResult> task) {
                 showLoader(false);
                 Log.i("Chelix", "createUserWithEmailAndPassword:onComplete: " + task.isSuccessful());
-                if (task.isSuccessful())
+                if (task.isSuccessful()) {
                     Log.i("Chelix", "Created user: " + task.getResult().getUser().toString());
-                else
+                    startActivity(new Intent(RegisterActivity.this, PlacesListActivity.class));
+                }else
                     Log.i("Chelix", "Usuario no creado: " + task.getException().getMessage());
             }
         });
@@ -152,18 +143,6 @@ public class RegisterActivity extends AppCompatActivity implements FirebaseAuth.
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
         return password.length() > 4;
-    }
-
-    @Override
-    public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-        FirebaseUser user = firebaseAuth.getCurrentUser();
-        if (user != null) {
-            // User is signed in
-            Log.d("Chelix", "onAuthStateChanged:signed_in:" + user.getUid());
-        } else {
-            // User is signed out
-            Log.d("Chelis", "onAuthStateChanged:signed_out");
-        }
     }
 
     private void showLoader(boolean show){

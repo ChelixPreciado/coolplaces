@@ -12,4 +12,11 @@
     tools:context="interware.coolapp.ui.PlacesList.PlacesListActivity"
     tools:showIn="@layout/app_bar_places_list">
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_places"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+    </android.support.v7.widget.RecyclerView>
 </RelativeLayout>
