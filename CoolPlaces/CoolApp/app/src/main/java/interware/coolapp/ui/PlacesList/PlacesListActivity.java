@@ -170,8 +170,7 @@ public class PlacesListActivity extends AppCompatActivity
                 return super.clone();
             }
         };
-        ArrayList<Place> places = placesSnapshot.getValue(t);
-        return places;
+        return (ArrayList<Place>)placesSnapshot.getValue(t);
     }
 
     private LoaderUtils getLoaderUtils(){

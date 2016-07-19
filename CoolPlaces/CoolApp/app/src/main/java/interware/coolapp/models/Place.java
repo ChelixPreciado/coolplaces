@@ -3,6 +3,9 @@ package interware.coolapp.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
+import java.util.Map;
+
 /**
  * Created by chelixpreciado on 7/15/16.
  */
@@ -11,8 +14,8 @@ public class Place implements Parcelable{
     private int id;
     private String lugar;
     private String estado;
-    private Long lat;
-    private Long lon;
+    private double lat;
+    private double lon;
     private String imagen;
     private String descripcion;
 
@@ -22,6 +25,8 @@ public class Place implements Parcelable{
         id = in.readInt();
         lugar = in.readString();
         estado = in.readString();
+        lat = in.readDouble();
+        lon = in.readDouble();
         imagen = in.readString();
         descripcion = in.readString();
     }
@@ -62,19 +67,19 @@ public class Place implements Parcelable{
         this.estado = estado;
     }
 
-    public Long getLat() {
+    public double getLat() {
         return lat;
     }
 
-    public void setLat(Long lat) {
+    public void setLat(double lat) {
         this.lat = lat;
     }
 
-    public Long getLon() {
+    public double getLon() {
         return lon;
     }
 
-    public void setLon(Long lon) {
+    public void setLon(double lon) {
         this.lon = lon;
     }
 
@@ -104,6 +109,8 @@ public class Place implements Parcelable{
         parcel.writeInt(id);
         parcel.writeString(lugar);
         parcel.writeString(estado);
+        parcel.writeDouble(lat);
+        parcel.writeDouble(lon);
         parcel.writeString(imagen);
         parcel.writeString(descripcion);
     }

@@ -16,6 +16,8 @@ public class LoaderUtils {
         this.activity = activity;
     }
 
+    private boolean isShowing;
+
     private Loader getLoader() {
         if (loader==null)
             loader = Loader.newInstance();
@@ -26,6 +28,8 @@ public class LoaderUtils {
         if (shouldShow)
             getLoader().show(activity.getFragmentManager(), "ShowLoader");
         else
-            getLoader().dismiss();
+            if (isShowing)
+                getLoader().dismiss();
+        isShowing = shouldShow;
     }
 }
