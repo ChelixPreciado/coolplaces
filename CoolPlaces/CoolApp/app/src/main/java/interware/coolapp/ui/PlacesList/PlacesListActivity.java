@@ -1,7 +1,9 @@
 package interware.coolapp.ui.PlacesList;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,8 +18,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -29,6 +35,7 @@ import java.util.ArrayList;
 
 import interware.coolapp.R;
 import interware.coolapp.adapters.PlacesAdapter;
+import interware.coolapp.firebase.database.DBManager;
 import interware.coolapp.models.Place;
 import interware.coolapp.ui.LogIn.LoginActivity;
 import interware.coolapp.ui.PlaceDetail.PlaceDetailActivity;
@@ -40,8 +47,9 @@ public class PlacesListActivity extends AppCompatActivity
     private FirebaseAuth mAuth;
     private TextView txtUserMail;
     private FirebaseUser firebaseUser;
-    private DatabaseReference mDataBase;
+    private FirebaseAnalytics firebaseAnalytics;
     private LoaderUtils loaderUtils;
+    private DBManager dbManager;
 
     private RecyclerView rvPlaces;
     private PlacesAdapter placesAdapter;
@@ -55,7 +63,8 @@ public class PlacesListActivity extends AppCompatActivity
 
         mAuth = FirebaseAuth.getInstance();
         firebaseUser = mAuth.getCurrentUser();
-        mDataBase = FirebaseDatabase.getInstance().getReference();
+        firebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        dbManager = new DBManager(getApplicationContext());
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -72,18 +81,34 @@ public class PlacesListActivity extends AppCompatActivity
         rvPlaces.setItemAnimator(new DefaultItemAnimator());
 
         getLoaderUtils().showLoader(true);
+
+        /*UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                .setDisplayName("José Luis Preciado")
+                .setPhotoUri(Uri.parse("https://dl.dropboxusercontent.com/u/5025198/jl_appdata_0.png"))
+                .build();
+
+        firebaseUser.updateProfile(profileUpdates)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Log.d("Chelix", "User profile updated.");
+                        }
+                    }
+                });*/
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        mDataBase.addValueEventListener(this);
+        Log.i("Chelix", "OnStart Called..");
+        dbManager.getmDataBase().addValueEventListener(this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        mDataBase.removeEventListener(this);
+        dbManager.getmDataBase().removeEventListener(this);
     }
 
     @Override
@@ -94,28 +119,6 @@ public class PlacesListActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.places_list, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -145,7 +148,6 @@ public class PlacesListActivity extends AppCompatActivity
         placesAdapter.setListener(new PlacesAdapter.PlacesAdapterListener() {
             @Override
             public void onPlaceClick(Place place) {
-                Log.i("Chelix", "Place selected: " + place.getLugar());
                 Intent intent = new Intent(PlacesListActivity.this, PlaceDetailActivity.class);
                 intent.putExtra("selectedPlace", place);
                 startActivity(intent);
@@ -162,7 +164,6 @@ public class PlacesListActivity extends AppCompatActivity
     }
 
     public ArrayList<Place> getPlaces(DataSnapshot dataSnapshot){
-        Log.i("Chelix", "Snapchot: " + dataSnapshot.getValue());
         DataSnapshot placesSnapshot = dataSnapshot.child("places");
         GenericTypeIndicator<ArrayList<Place>> t = new GenericTypeIndicator<ArrayList<Place>>() {
             @Override

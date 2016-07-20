@@ -34,6 +34,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -57,15 +58,18 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener,
     private EditText mPasswordView;
     private View mLoginFormView;
     private FirebaseAuth mAuth;
+    private FirebaseAnalytics firebaseAnalytics;
 
     private Button btn_sign_in, btn_sign_up;
     private LoaderUtils loaderUtils;
+    private boolean isLogged;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         mAuth = FirebaseAuth.getInstance();
+        firebaseAnalytics = FirebaseAnalytics.getInstance(this);
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
 
@@ -87,6 +91,8 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener,
         btn_sign_up = (Button)findViewById(R.id.btn_register);
         btn_sign_in.setOnClickListener(this);
         btn_sign_up.setOnClickListener(this);
+
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.APP_OPEN, null);
     }
 
     @Override
@@ -160,6 +166,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener,
                         if (task.isSuccessful()) {
                             FirebaseUser user = task.getResult().getUser();
                             Log.i("Chelix", "logged user: " + user.getUid());
+                            firebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, null);
                             startActivity(new Intent(LoginActivity.this, PlacesListActivity.class));
                             finish();
                         }else {
@@ -202,9 +209,11 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener,
     @Override
     public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
         FirebaseUser user = firebaseAuth.getCurrentUser();
-        if (user != null) {
+        if (user != null && !isLogged) {
             // User is signed in
             Log.d("Chelix", "user is signed in: " + user.getUid() + " onAuthStateChanged");
+            isLogged=true;
+            firebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, null);
             startActivity(new Intent(LoginActivity.this, PlacesListActivity.class));
             finish();
         } else {
